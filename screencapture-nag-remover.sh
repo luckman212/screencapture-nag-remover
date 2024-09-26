@@ -7,7 +7,12 @@ if [[ $MAJ != 15 ]]; then
 fi
 
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
-FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
+
+if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
+	echo >&2 "Full Disk Access is required${TERM_PROGRAM:+ for $TERM_PROGRAM}"
+	open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
+	exit 1
+fi
 
 _createPlist() {
 	cat <<-EOF >"$PLIST"
@@ -52,6 +57,7 @@ case $1 in
 esac
 
 [[ -e $PLIST ]] || _createPlist
+FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
 case $1 in
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
