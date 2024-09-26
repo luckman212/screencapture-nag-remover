@@ -9,30 +9,43 @@ fi
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
 FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
+_bounce_daemons() {
+	/usr/bin/killall -HUP replayd
+	/usr/bin/killall -u "$USER" cfprefsd
+}
+
+_nagblock() {
+	[[ -n $1 ]] || { echo >&2 "supply complete pathname to the binary inside the app bundle"; return 1; }
+	[[ -e $1 ]] || { echo >&2 "$1 does not exist"; return 1; }
+	IFS='/' read -ra PARTS <<< "$1"
+	for p in "${PARTS[@]}"; do
+		if [[ $p == *.app ]]; then
+			echo >&2 "disabling nag for $p"
+			/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+			return 0
+		fi
+	done
+	return 1
+}
+
 case $1 in
 	-h|--help)
 		/bin/cat <<-EOF
 		${0##*/} [args]
-		    -r,--reveal    show the related plist in Finder
-		    -p,--print     print current values
+		    -r,--reveal       show the related plist in Finder
+		    -p,--print        print current values
+		    -a,--add <path>   manually create an entry (supply full path)
 		EOF
 		exit
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
+	-a|--add)	_nagblock "$2"; _bounce_daemons; exit;;
 esac
 
 while read -r APP_PATH ; do
-	IFS='/' read -ra PARTS <<< "$APP_PATH"
-	for p in "${PARTS[@]}"; do
-		if [[ -e $APP_PATH ]] && [[ $p == *.app ]]; then
-			echo 1>&2 "disabling nag for $p"
-			/usr/bin/defaults write "$PLIST" "$APP_PATH" -date "$FUTURE"
-			break
-		fi
-	done
+	_nagblock "$APP_PATH"
 done < <(/usr/bin/plutil -convert xml1 -o - -- "$PLIST" | /usr/bin/sed -n "s/.*<key>\(.*\)<\/key>.*/\1/p")
 
 #bounce daemons so changes are detected
-/usr/bin/killall -HUP replayd
-/usr/bin/killall -u "$USER" cfprefsd
+_bounce_daemons
