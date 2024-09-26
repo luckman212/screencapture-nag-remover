@@ -16,11 +16,11 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
 
-Then simply run the command with no arguments. It will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
+Then run the command from a Terminal. With no arguments, it will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
 
 > **N.B.** _If [life expectancy][1] increases dramatically over the next few years, you might need to run the app again in a decade or two._ 😉
 
-There are a couple of commandline arguments:
+There are also a few commandline arguments:
 
 - `-r` will reveal the .plist responsible for these nags in Finder
 - `-p` will print the **current** values without making any changes
