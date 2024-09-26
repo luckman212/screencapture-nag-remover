@@ -7,7 +7,8 @@
 macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many people, and insulted power users who prefer to have full control over their systems. The effect is nagging popups like the one below when apps that you have already granted permission to try to record your screen.
 
 <img src="./sample.png" width="200" alt="nag image" />
-_Hey Apple, you forgot the “Always Allow” option!_
+
+> _Hey Apple, you forgot the “Always Allow” option!_
 
 ## How to use
 
