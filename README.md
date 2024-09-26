@@ -1,0 +1,1 @@
+# screencapture-nag-remover
