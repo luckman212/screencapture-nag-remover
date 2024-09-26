@@ -3,8 +3,8 @@
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
 MDM_PROFILE='/private/tmp/15.1_DisableScreenCaptureAlerts.mobileconfig'
 
-IFS='.' read -r MAJ MIN DOT < <(/usr/bin/sw_vers --productVersion)
-if [[ $MAJ != 15 ]]; then
+IFS='.' read -r MAJ MIN _ < <(/usr/bin/sw_vers --productVersion)
+if (( MAJ < 15 )); then
 	echo >&2 "this tool requires macOS 15 (Sequoia)"
 	exit
 fi
@@ -106,7 +106,7 @@ case $1 in
 	--profile) _openDeviceManagement; exit;;
 esac
 
-if [[ $MAJ.$MIN == 15.0 ]]; then
+if (( MAJ == 15 )) && (( MIN > 0 )); then
 	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
 		cat <<-EOF
 		==============================================================================
