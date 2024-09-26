@@ -13,7 +13,7 @@ macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many
 
 ## How to use
 
-Download the latest release and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
+Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
 
 Then simply run the command with no arguments. It will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
 
