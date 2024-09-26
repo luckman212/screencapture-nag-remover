@@ -8,7 +8,7 @@ macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many
 
 <figure>
   <img src="./sample.png" width="200" alt="nag image" />
-  <figcaption style="font: italic bold 12px sans-serif;">Hey Apple, you forgot the “Always Allow” option!</figcaption>
+  <figcaption style="font: italic bold 12px sans-serif;">_Hey Apple, you forgot the “Always Allow” option!_</figcaption>
 </figure>
 
 ## How to use
