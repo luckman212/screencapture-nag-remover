@@ -16,7 +16,9 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
 
-Then run the command from a Terminal. With no arguments, it will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
+Then run the program from a shell (Full Disk Access is required, and the program will check to ensure FDA has been granted. If it hasn't, the relevant System Settings panel will be opened).
+
+With no arguments, it will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
 
 > **N.B.** _If [life expectancy][1] increases dramatically over the next few years, you might need to run the app again in a decade or two._ 😉
 
