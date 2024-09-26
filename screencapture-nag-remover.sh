@@ -9,6 +9,17 @@ fi
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
 FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
+_createPlist() {
+	cat <<-EOF >"$PLIST"
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+	<dict>
+	</dict>
+	</plist>
+	EOF
+}
+
 _bounce_daemons() {
 	/usr/bin/killall -HUP replayd
 	/usr/bin/killall -u "$USER" cfprefsd
@@ -38,9 +49,15 @@ case $1 in
 		EOF
 		exit
 		;;
+esac
+
+[[ -e $PLIST ]] || _createPlist
+
+case $1 in
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
 	-a|--add)	_nagblock "$2"; _bounce_daemons; exit;;
+	-*) echo >&2 "invalid arg: $1"; exit 1;;
 esac
 
 while read -r APP_PATH ; do

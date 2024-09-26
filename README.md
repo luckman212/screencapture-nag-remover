@@ -10,6 +10,8 @@ macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many
 
 > _Hey Apple, you forgot the “Always Allow” option!_
 
+This script operates on the `~/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist` and sets the nag dates far in the future to avoid the popups from appearing.
+
 ## How to use
 
 Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
