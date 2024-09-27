@@ -144,10 +144,10 @@ case $1 in
 
 		a tool to help suppress macOS Sequoia's persistent ScreenCapture alerts
 		usage: ${0##*/} [args]
-		    -r,--reveal            show the related plist in Finder
+		    -r,--reveal            show ${PLIST##*/} in Finder
 		    -p,--print             print current values
 		    $(_manual_add_desc)
-		    --reset                initialize an empty ${PLIST##*/}
+		    --reset                initialize empty ${PLIST##*/}
 		    --generate_profile     generate configuration profile for use with your MDM server
 		    --profiles             opens Device Management in System Settings
 		EOF
@@ -168,12 +168,19 @@ case $1 in
 		if [[ -e $PLIST ]]; then
 			/usr/bin/open -R "$PLIST"
 		else
-			/usr/bin/open -R "$(dirname "$PLIST")"
+			/usr/bin/open "$(dirname "$PLIST")"
 		fi
 		exit
 		;;
-	-p|--print) [[ -e $PLIST ]] && /usr/bin/plutil -p "$PLIST"; exit;;
-	--reset) _create_plist || echo >&2 "error, could not create plist"; exit;;
+	-p|--print)
+		if [[ -e $PLIST ]]; then
+			/usr/bin/plutil -p "$PLIST"
+		else
+			echo >&2 "${PLIST##*/} does not exist"
+		fi
+		exit
+		;;
+	--reset) _create_plist || echo >&2 "error, could not create ${PLIST##*/}"; exit;;
 	--generate_profile) _generate_mdm_profile; exit;;
 	--profiles) _open_device_management; exit;;
 esac
