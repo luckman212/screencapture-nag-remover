@@ -14,7 +14,7 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 ## macOS 15.1 (currently in beta)
 
-macOS 15.1 has introduced a new method for suppressing these alerts across the board. This requires an MDM profile (typically something provided by Jamf, Addigy, Mosyle etc). A manually generated profile can be installed without requiring the Mac to be MDM-joined.
+macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This requires an MDM profile (typically something provided by Jamf, Addigy, Mosyle etc). A manually generated profile can be installed without requiring the Mac to be MDM-joined.
 
 When run without arguments on 15.1 or higher, the script will offer to install this profile for you.
 
@@ -55,3 +55,4 @@ If you encounter any problems, please file an [issue][3]. And in case anyone [@A
 [2]: https://github.com/apple
 [3]: https://github.com/luckman212/screencapture-nag-remover/issues
 [4]: https://github.com/luckman212/screencapture-nag-remover/releases
+[5]: https://developer.apple.com/documentation/macos-release-notes/macos-15_1-release-notes#New-Features
