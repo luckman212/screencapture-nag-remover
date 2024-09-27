@@ -129,7 +129,11 @@ if (( MAJ == 15 )) && (( MIN > 0 )); then
 fi
 
 if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
-	echo >&2 "Full Disk Access is required${TERM_PROGRAM:+ for $TERM_PROGRAM}"
+	if [[ -n $__CFBundleIdentifier ]]; then
+		TERMINAL_PATH=$(mdfind "kMDItemCFBundleIdentifier == $__CFBundleIdentifier" 2>/dev/null)
+		TERMINAL_NAME=${TERMINAL_PATH##*/}
+	fi
+	echo >&2 "Full Disk Access is required${TERMINAL_NAME:+ for $TERMINAL_NAME}"
 	open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
 	exit 1
 fi
