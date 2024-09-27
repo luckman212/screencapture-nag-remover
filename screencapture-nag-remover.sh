@@ -13,17 +13,17 @@ _os_is_151_or_higher() {
 	(( MAJ >= 15 )) && (( MIN > 0 ))
 }
 
-_openDeviceManagement() {
+_open_device_management() {
 	/usr/bin/open 'x-apple.systempreferences:com.apple.preferences.configurationprofiles'
 }
 
 _bundleid_to_name() {
 	local APP_NAME
-	APP_NAME=$(mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null)
+	APP_NAME=$(/usr/bin/mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null)
 	echo "${APP_NAME##*/}"
 }
 
-_createPlist() {
+_create_plist() {
 	cat <<-EOF >"$PLIST"
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -40,7 +40,6 @@ _bounce_daemons() {
 }
 
 _nagblock() {
-	echo "in nagblock [$1]"
 	local APP_NAME
 	if _os_is_151_or_higher; then
 		if [[ -z $1 ]]; then
@@ -69,7 +68,7 @@ _nagblock() {
 	fi
 }
 
-_enumApps() {
+_enum_apps() {
 	[[ -e $PLIST ]] || return 1
 	if _os_is_151_or_higher; then
 		/usr/bin/plutil -convert raw -o - -- "$PLIST"
@@ -79,7 +78,7 @@ _enumApps() {
 	fi
 }
 
-_installMdmProfile() {
+_install_mdm_profile() {
 /bin/cat <<EOF >"$MDM_PROFILE"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -124,8 +123,8 @@ The Device Management panel from System Settings should now open.
 Double-click on the 'Disable ScreenCapture Alerts' profile to install and activate it.
 
 EOF
-sleep 1
-_openDeviceManagement
+/bin/sleep 1
+_open_device_management
 }
 
 _manual_add_desc() {
@@ -150,8 +149,8 @@ case $1 in
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
-	--reset) _createPlist; exit;;
-	--profile) _openDeviceManagement; exit;;
+	--reset) _create_plist; exit;;
+	--profile) _open_device_management; exit;;
 esac
 
 if _os_is_151_or_higher; then
@@ -165,10 +164,10 @@ if _os_is_151_or_higher; then
 		read -r -p "==> would you like to install this profile (Y/n)? " ANSWER
 		[[ -z $ANSWER ]] && ANSWER='y'
 		case $ANSWER in
-			[yY]) _installMdmProfile; exit 0;;
+			[yY]) _install_mdm_profile; exit 0;;
 		esac
 	else
-		cat <<-EOF
+		/bin/cat <<-EOF
 		The Configuration Profile to suppress the ScreenCapture alerts is installed.
 		Remove it if you'd like to use this tool in legacy mode.
 		EOF
@@ -185,7 +184,7 @@ if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	exit 1
 fi
 
-[[ -e $PLIST ]] || _createPlist
+[[ -e $PLIST ]] || _create_plist
 FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
 case $1 in
@@ -194,8 +193,9 @@ case $1 in
 esac
 
 while read -r APP_PATH ; do
+	[[ -n $APP_PATH ]] || continue
 	_nagblock "$APP_PATH"
-done < <(_enumApps)
+done < <(_enum_apps)
 
 #bounce daemons so changes are detected
 _bounce_daemons
