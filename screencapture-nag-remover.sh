@@ -96,8 +96,6 @@ _install_mdm_profile() {
 	<integer>1</integer>
 	<key>PayloadEnabled</key>
 	<true/>
-	<key>PayloadScope</key>
-	<string>System</string>
 	<key>PayloadContent</key>
 	<array>
 		<dict>
