@@ -9,8 +9,16 @@ if (( MAJ < 15 )); then
 	exit
 fi
 
+_os_is_151_or_higher() {
+	(( MAJ >= 15 )) && (( MIN > 0 ))
+}
+
 _openDeviceManagement() {
 	/usr/bin/open 'x-apple.systempreferences:com.apple.preferences.configurationprofiles'
+}
+
+_bundleid_to_name() {
+	mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null
 }
 
 _createPlist() {
@@ -30,17 +38,39 @@ _bounce_daemons() {
 }
 
 _nagblock() {
-	[[ -n $1 ]] || { echo >&2 "supply complete pathname to the binary inside the app bundle"; return 1; }
-	[[ -e $1 ]] || { echo >&2 "$1 does not exist"; return 1; }
-	IFS='/' read -ra PARTS <<< "$1"
-	for p in "${PARTS[@]}"; do
-		if [[ $p == *.app ]]; then
-			echo >&2 "disabling nag for $p"
-			/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
-			return 0
+	local APP_NAME
+	if _os_is_151_or_higher; then
+		if [[ -z $1 ]]; then
+			echo >&2 "supply the bundle ID of the app"
+			return 1
 		fi
-	done
-	return 1
+		APP_NAME=$(_bundleid_to_name "$1")
+		echo >&2 "disabling nag for $1${APP_NAME:+ ($APP_NAME)}"
+		#/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+	else
+		if [[ -z $1 ]]; then
+			echo >&2 "supply complete pathname to the binary inside the app bundle"
+			return 1
+		fi
+		[[ -e $1 ]] || { echo >&2 "$1 does not exist"; return 1; }
+		IFS='/' read -ra PARTS <<< "$1"
+		for p in "${PARTS[@]}"; do
+			if [[ $p == *.app ]]; then
+				echo >&2 "disabling nag for $p"
+				/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+				return 0
+			fi
+		done
+	fi
+}
+
+_enumApps() {
+	if _os_is_151_or_higher; then
+		/usr/bin/plutil -convert raw -o - -- "$PLIST"
+	else
+		/usr/bin/plutil -convert xml1 -o - -- "$PLIST" |
+		/usr/bin/sed -n "s/.*<key>\(.*\)<\/key>.*/\1/p"
+	fi
 }
 
 _installMdmProfile() {
@@ -92,14 +122,22 @@ sleep 1
 _openDeviceManagement
 }
 
+_manual_add_desc() {
+	if _os_is_151_or_higher ; then
+		echo "-a,--add <bundle_id>   manually create an entry"
+	else
+		echo "-a,--add <path>        manually create an entry (supply full path to binary)"
+	fi
+}
+
 case $1 in
 	-h|--help)
 		/bin/cat <<-EOF
 		${0##*/} [args]
-		    -r,--reveal       show the related plist in Finder
-		    -p,--print        print current values
-		    -a,--add <path>   manually create an entry (supply full path)
-		    --profile         opens Device Management in System Settings
+		    -r,--reveal            show the related plist in Finder
+		    -p,--print             print current values
+		    $(_manual_add_desc)
+		    --profile              opens Device Management in System Settings
 		EOF
 		exit
 		;;
@@ -132,7 +170,7 @@ fi
 
 if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	if [[ -n $__CFBundleIdentifier ]]; then
-		TERMINAL_PATH=$(mdfind "kMDItemCFBundleIdentifier == $__CFBundleIdentifier" 2>/dev/null)
+		TERMINAL_PATH=$(_bundleid_to_name "$__CFBundleIdentifier")
 		TERMINAL_NAME=${TERMINAL_PATH##*/}
 	fi
 	echo >&2 "Full Disk Access is required${TERMINAL_NAME:+ for $TERMINAL_NAME}"
@@ -150,7 +188,7 @@ esac
 
 while read -r APP_PATH ; do
 	_nagblock "$APP_PATH"
-done < <(/usr/bin/plutil -convert xml1 -o - -- "$PLIST" | /usr/bin/sed -n "s/.*<key>\(.*\)<\/key>.*/\1/p")
+done < <(_enumApps)
 
 #bounce daemons so changes are detected
 _bounce_daemons
