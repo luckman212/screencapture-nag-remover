@@ -18,7 +18,9 @@ _openDeviceManagement() {
 }
 
 _bundleid_to_name() {
-	mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null
+	local APP_NAME
+	APP_NAME=$(mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null)
+	echo "${APP_NAME##*/}"
 }
 
 _createPlist() {
@@ -170,8 +172,7 @@ fi
 
 if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	if [[ -n $__CFBundleIdentifier ]]; then
-		TERMINAL_PATH=$(_bundleid_to_name "$__CFBundleIdentifier")
-		TERMINAL_NAME=${TERMINAL_PATH##*/}
+		TERMINAL_NAME=$(_bundleid_to_name "$__CFBundleIdentifier")
 	fi
 	echo >&2 "Full Disk Access is required${TERMINAL_NAME:+ for $TERMINAL_NAME}"
 	open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
