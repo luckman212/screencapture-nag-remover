@@ -16,7 +16,7 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This requires an MDM profile (typically something provided by Jamf, Addigy, Mosyle etc). A manually generated profile can be installed without requiring the Mac to be MDM-joined.
 
-When run without arguments on 15.1 or higher, the script will offer to install this profile for you.
+When run without arguments on 15.1 or higher, the script will offer to install this profile for you. Doing so is optional, the script also supports the previous method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
 
 ## How to use
 
