@@ -149,8 +149,8 @@ case $1 in
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
-	--reset) _create_plist; exit;;
 	--profile) _open_device_management; exit;;
+	--reset) _create_plist; exit;;
 esac
 
 if _os_is_151_or_higher && (( $# == 0 )); then
