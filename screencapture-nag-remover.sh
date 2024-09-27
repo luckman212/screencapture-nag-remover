@@ -69,6 +69,7 @@ _nagblock() {
 }
 
 _enumApps() {
+	[[ -e $PLIST ]] || return 1
 	if _os_is_151_or_higher; then
 		/usr/bin/plutil -convert raw -o - -- "$PLIST"
 	else
