@@ -52,6 +52,7 @@ _nagblock() {
 		/usr/bin/defaults write "$PLIST" "$1" -dict \
 			kScreenCaptureApprovalLastAlerted -date "$FUTURE" \
 			kScreenCaptureApprovalLastUsed -date "$FUTURE"
+		(( c++ ))
 	else
 		if [[ -z $1 ]]; then
 			echo >&2 "supply complete pathname to the binary inside the app bundle"
@@ -63,6 +64,7 @@ _nagblock() {
 			if [[ $p == *.app ]]; then
 				echo >&2 "disabling nag for $p"
 				/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+				(( c++ ))
 				return 0
 			fi
 		done
@@ -200,10 +202,11 @@ case $1 in
 	-*) echo >&2 "invalid arg: $1"; exit 1;;
 esac
 
+c=0
 while read -r APP_PATH ; do
 	[[ -n $APP_PATH ]] || continue
 	_nagblock "$APP_PATH"
 done < <(_enum_apps)
 
-#bounce daemons so changes are detected
-_bounce_daemons
+#bounce daemons if any changes were made so the new settings take effect
+(( c > 0 )) && _bounce_daemons
