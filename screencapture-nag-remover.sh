@@ -117,6 +117,8 @@ _install_mdm_profile() {
 	<string>E6056B28-1B01-4EED-8F41-859E6C02E688</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
+	<key>PayloadScope</key>
+	<string>System</string>
 </dict>
 </plist>
 EOF
