@@ -12,7 +12,7 @@ macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many
 
 This script operates on the `~/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist` and sets the nag dates far in the future to avoid the popups from appearing.
 
-## macOS 15.1
+## macOS 15.1 (currently in beta)
 
 macOS 15.1 has introduced a new method for suppressing these alerts across the board. This requires an MDM profile (typically something provided by Jamf, Addigy, Mosyle etc). A manually generated profile can be installed without requiring the Mac to be MDM-joined.
 
@@ -33,7 +33,8 @@ There are also a few commandline arguments:
 - `-r` will reveal the .plist responsible for these nags in Finder
 - `-p` will print the **current** values without making any changes
 - `-a <path|bundle_id>` creates a new entry in the plist for an app that you specify
-- `` 
+- `--profile` opens Device Management in System Settings (to manage MDM profiles)
+- `--reset` initialize an empty ScreenCaptureApprovals.plist
 
 ### Example of manually adding an app
 
