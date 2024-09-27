@@ -150,12 +150,14 @@ case $1 in
 		    --profiles             opens Device Management in System Settings
 		EOF
 		if _os_is_151_or_higher; then cat <<-EOF
-		┌───────────────────────────────────────────────────────────────────────────────┐
-		│  For Macs enrolled in an MDM server (Jamf, Addigy, Mosyle etc), macOS 15.1    │
-		│  offers an official method for suppressing ScreenCapture alerts for ALL apps. │
-		│  This is achieved by applying a Configuration Profile, which can be generated │
-		│  using the --generate_profile flag above.                                     │
-		└───────────────────────────────────────────────────────────────────────────────┘
+
+		    ┌───────────────────────────────────────────────────────────────────────────────┐
+		    │  For Macs enrolled in an MDM server (Jamf, Addigy, Mosyle etc), macOS 15.1    │
+		    │  offers an official method for suppressing ScreenCapture alerts for ALL apps. │
+		    │  This is achieved by applying a Configuration Profile, which can be generated │
+		    │  using the --generate_profile flag above.                                     │
+		    └───────────────────────────────────────────────────────────────────────────────┘
+
 		EOF
 		fi
 		exit
