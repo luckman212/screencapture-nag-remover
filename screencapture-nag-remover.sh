@@ -153,7 +153,7 @@ case $1 in
 	--profile) _open_device_management; exit;;
 esac
 
-if _os_is_151_or_higher; then
+if _os_is_151_or_higher && (( $# == 0 )); then
 	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
 		cat <<-EOF
 		┌─────────────────────────────────────────────────────────────────────────────┐
