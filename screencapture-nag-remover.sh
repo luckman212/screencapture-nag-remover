@@ -126,8 +126,8 @@ EOF
 #Apple prohibits self-installing TCC profiles, they can only be pushed via MDM
 #/usr/bin/open "$MDM_PROFILE"
 #_open_device_management
-echo "import $PROFILE into your MDM system to provision it"
-open -R "$PROFILE"
+echo "import $MDM_PROFILE into your MDM system to provision it"
+open -R "$MDM_PROFILE"
 }
 
 _manual_add_desc() {
