@@ -153,10 +153,10 @@ esac
 if _os_is_151_or_higher; then
 	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
 		cat <<-EOF
-		==============================================================================
-		macOS 15.1 offers an official method for suppressing the ScreenCapture alerts
-		The mechanism used is a Configuration Profile (also known as an MDM profile)
-		==============================================================================
+		=============================================================================
+		  macOS 15.1 offers an official method for suppressing ScreenCapture alerts
+		  for ALL apps. This is achieved by applying a Configuration (MDM) Profile.
+		=============================================================================
 		EOF
 		read -r -p "Would you like to install this profile (Y/n)? " ANSWER
 		[[ -z $ANSWER ]] && ANSWER='y'
