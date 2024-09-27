@@ -94,25 +94,23 @@ _install_mdm_profile() {
 	<string>com.apple.sequoia.stop.nagging</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
-	<key>PayloadEnabled</key>
-	<true/>
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>PayloadUUID</key>
-			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
-			<key>PayloadType</key>
-			<string>com.apple.TCC.configuration-profile-policy</key>
-			<key>PayloadIdentifier</key>
-			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
+			<key>ScreenCapture</key>
 			<dict>
-				<key>ScreenCapture</key>
-				<dict>
-					<key>forceBypassScreenCaptureAlert</key>
-					<true/>
-				</dict>
+				<key>forceBypassScreenCaptureAlert</key>
+				<true/>
 			</dict>
 		</dict>
+		<key>PayloadIdentifier</key>
+		<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
+		<key>PayloadType</key>
+		<string>com.apple.TCC.configuration-profile-policy</key>
+		<key>PayloadUUID</key>
+		<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
+		<key>PayloadVersion</key>
+		<integer>1</integer>
 	</array>
 </dict>
 </plist>
