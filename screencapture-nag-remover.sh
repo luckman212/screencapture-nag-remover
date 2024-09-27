@@ -102,16 +102,17 @@ _install_mdm_profile() {
 			<key>PayloadUUID</key>
 			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
 			<key>PayloadType</key>
-			<string>com.apple.TCC</string>
+			<string>com.apple.TCC.configuration-profile-policy</key>
 			<key>PayloadIdentifier</key>
 			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
-			<key>com.apple.TCC.configuration-profile-policy</key>
 			<dict>
 				<key>ScreenCapture</key>
-				<dict>
-					<key>forceBypassScreenCaptureAlert</key>
-					<true/>
-				</dict>
+				<array>
+					<dict>
+						<key>forceBypassScreenCaptureAlert</key>
+						<true/>
+					</dict>
+				</array>
 			</dict>
 		</dict>
 	</array>
