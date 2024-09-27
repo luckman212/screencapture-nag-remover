@@ -48,7 +48,9 @@ _nagblock() {
 		fi
 		APP_NAME=$(_bundleid_to_name "$1")
 		echo >&2 "disabling nag for $1${APP_NAME:+ ($APP_NAME)}"
-		#/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+		/usr/bin/defaults write "$PLIST" "$1" -dict \
+			kScreenCaptureApprovalLastAlerted -date "$FUTURE" \
+			kScreenCaptureApprovalLastUsed -date "$FUTURE"
 	else
 		if [[ -z $1 ]]; then
 			echo >&2 "supply complete pathname to the binary inside the app bundle"
@@ -148,7 +150,7 @@ case $1 in
 	--profile) _openDeviceManagement; exit;;
 esac
 
-if (( MAJ == 15 )) && (( MIN > 0 )); then
+if _os_is_151_or_higher; then
 	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
 		cat <<-EOF
 		==============================================================================
