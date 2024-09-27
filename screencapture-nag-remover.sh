@@ -141,7 +141,9 @@ _manual_add_desc() {
 case $1 in
 	-h|--help)
 		/bin/cat <<-EOF
-		${0##*/} [args]
+
+		Tool to help suppress macOS Sequoia's persistent ScreenCapture alerts
+		Usage: ${0##*/} [args]
 		    -r,--reveal            show the related plist in Finder
 		    -p,--print             print current values
 		    $(_manual_add_desc)
