@@ -164,8 +164,15 @@ case $1 in
 		fi
 		exit
 		;;
-	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
-	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
+	-r|--reveal)
+		if [[ -e $PLIST ]]; then
+			/usr/bin/open -R "$PLIST"
+		else
+			/usr/bin/open -R "$(dirname "$PLIST")"
+		fi
+		exit
+		;;
+	-p|--print) [[ -e $PLIST ]] && /usr/bin/plutil -p "$PLIST"; exit;;
 	--reset) _create_plist || echo >&2 "error, could not create plist"; exit;;
 	--generate_profile) _generate_mdm_profile; exit;;
 	--profiles) _open_device_management; exit;;
