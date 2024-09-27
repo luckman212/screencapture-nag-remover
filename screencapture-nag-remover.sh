@@ -92,6 +92,8 @@ _install_mdm_profile() {
 				<key>ScreenCapture</key>
 				<array>
 					<dict>
+						<key>Authorization</key>
+						<string>AllowStandardUserToSetSystemService</string>
 						<key>forceBypassScreenCaptureAlert</key>
 						<true/>
 					</dict>
