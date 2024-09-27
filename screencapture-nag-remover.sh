@@ -100,7 +100,7 @@ _install_mdm_profile() {
 			<key>PayloadIdentifier</key>
 			<string>com.sequoia.stop.nagging.tccpayload</string>
 			<key>PayloadType</key>
-			<string>com.apple.TCC.configuration-profile-policy</key>
+			<string>com.apple.TCC.configuration-profile-policy</string>
 			<key>PayloadUUID</key>
 			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
 			<key>PayloadVersion</key>
