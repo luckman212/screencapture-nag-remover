@@ -107,12 +107,10 @@ _install_mdm_profile() {
 			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
 			<dict>
 				<key>ScreenCapture</key>
-				<array>
-					<dict>
-						<key>forceBypassScreenCaptureAlert</key>
-						<true/>
-					</dict>
-				</array>
+				<dict>
+					<key>forceBypassScreenCaptureAlert</key>
+					<true/>
+				</dict>
 			</dict>
 		</dict>
 	</array>
