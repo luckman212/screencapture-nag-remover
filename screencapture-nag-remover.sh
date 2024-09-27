@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
-MDM_PROFILE='/private/tmp/15.1_DisableScreenCaptureAlerts.mobileconfig'
+MDM_PROFILE="$HOME/Downloads/macOS_15.1_DisableScreenCaptureAlerts.mobileconfig"
 
 IFS='.' read -r MAJ MIN _ < <(/usr/bin/sw_vers --productVersion)
 if (( MAJ < 15 )); then
@@ -78,7 +78,7 @@ _enum_apps() {
 	fi
 }
 
-_install_mdm_profile() {
+_generate_mdm_profile() {
 /bin/cat <<EOF >"$MDM_PROFILE"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -92,8 +92,6 @@ _install_mdm_profile() {
 				<key>ScreenCapture</key>
 				<array>
 					<dict>
-						<key>Authorization</key>
-						<string>AllowStandardUserToSetSystemService</string>
 						<key>forceBypassScreenCaptureAlert</key>
 						<true/>
 					</dict>
@@ -124,15 +122,11 @@ _install_mdm_profile() {
 </dict>
 </plist>
 EOF
-/usr/bin/open "$MDM_PROFILE"
-/bin/cat <<EOF
-
-The Device Management panel from System Settings should now open.
-Double-click on the 'Disable ScreenCapture Alerts' profile to install and activate it.
-
-EOF
-/bin/sleep 1
-_open_device_management
+#Apple prohibits self-installing TCC profiles, they can only be pushed via MDM
+#/usr/bin/open "$MDM_PROFILE"
+#_open_device_management
+echo "import $PROFILE into your MDM system to provision it"
+open -R "$PROFILE"
 }
 
 _manual_add_desc() {
@@ -150,40 +144,27 @@ case $1 in
 		    -r,--reveal            show the related plist in Finder
 		    -p,--print             print current values
 		    $(_manual_add_desc)
-		    --profile              opens Device Management in System Settings
 		    --reset                initialize an empty ${PLIST##*/}
-		    --ignore               ignore MDM profile even if installed (legacy mode)
+		    --generate_profile     generate configuration profile for use with your MDM server
+		    --profiles             opens Device Management in System Settings
 		EOF
+		if _os_is_151_or_higher; then cat <<-EOF
+		┌───────────────────────────────────────────────────────────────────────────────┐
+		│  For Macs enrolled in an MDM server (Jamf, Addigy, Mosyle etc), macOS 15.1    │
+		│  offers an official method for suppressing ScreenCapture alerts for ALL apps. │
+		│  This is achieved by applying a Configuration Profile, which can be generated │
+		│  using the --generate_profile flag above.                                     │
+		└───────────────────────────────────────────────────────────────────────────────┘
+		EOF
+		fi
 		exit
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
-	--profile) _open_device_management; exit;;
 	--reset) _create_plist; exit;;
-	--ignore) shift; IGNORE_MDM_PROFILE=true;;
+	--generate_profile) _generate_mdm_profile; exit;;
+	--profiles) _open_device_management; exit;;
 esac
-
-if _os_is_151_or_higher && (( $# == 0 )) && [[ $IGNORE_MDM_PROFILE != true ]]; then
-	if ! profiles list -type configuration | grep -q com.sequoia.stop.nagging ; then
-		cat <<-EOF
-		┌─────────────────────────────────────────────────────────────────────────────┐
-		│  macOS 15.1 offers an official method for suppressing ScreenCapture alerts  │
-		│  for ALL apps. This is achieved by applying a Configuration (MDM) Profile.  │
-		└─────────────────────────────────────────────────────────────────────────────┘
-		EOF
-		read -r -p "==> would you like to install this profile (Y/n)? " ANSWER
-		[[ -z $ANSWER ]] && ANSWER='y'
-		case $ANSWER in
-			[yY]) _install_mdm_profile; exit 0;;
-		esac
-	else
-		/bin/cat <<-EOF
-		The Configuration Profile to suppress the ScreenCapture alerts is installed.
-		Remove it if you'd like to use this tool in legacy mode.
-		EOF
-		exit 0
-	fi
-fi
 
 if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	if [[ -n $__CFBundleIdentifier ]]; then
