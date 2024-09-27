@@ -87,13 +87,18 @@ _install_mdm_profile() {
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>ScreenCapture</key>
+			<key>Services</key>
 			<dict>
-					<key>forceBypassScreenCaptureAlert</key>
-					<true/>
+				<key>ScreenCapture</key>
+				<array>
+					<dict>
+						<key>forceBypassScreenCaptureAlert</key>
+						<true/>
+					</dict>
+				</array>
 			</dict>
 			<key>PayloadIdentifier</key>
-			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
+			<string>com.sequoia.stop.nagging.tccpayload</string>
 			<key>PayloadType</key>
 			<string>com.apple.TCC.configuration-profile-policy</key>
 			<key>PayloadUUID</key>
@@ -105,7 +110,7 @@ _install_mdm_profile() {
 	<key>PayloadDisplayName</key>
 	<string>Disable ScreenCapture Alerts</string>
 	<key>PayloadIdentifier</key>
-	<string>com.apple.sequoia.stop.nagging</string>
+	<string>com.sequoia.stop.nagging</string>
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
@@ -155,7 +160,7 @@ case $1 in
 esac
 
 if _os_is_151_or_higher && (( $# == 0 )) && [[ $IGNORE_MDM_PROFILE != true ]]; then
-	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
+	if ! profiles list -type configuration | grep -q com.sequoia.stop.nagging ; then
 		cat <<-EOF
 		┌─────────────────────────────────────────────────────────────────────────────┐
 		│  macOS 15.1 offers an official method for suppressing ScreenCapture alerts  │
