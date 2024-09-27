@@ -14,9 +14,9 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 ## macOS 15.1 (currently in beta)
 
-macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This requires an MDM profile (typically something provided by Jamf, Addigy, Mosyle etc). A manually generated profile can be installed without requiring the Mac to be MDM-joined.
+macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This leverages a configuration profile which must be provisioned by an MDM server (e.g Jamf, Addigy, Mosyle etc). Apple unfortunately prohibits self-installing configuration profiles for certain TCC settings, ScreenCapture being one of them.
 
-When run without arguments on 15.1 or higher, the script will offer to install this profile for you. Doing so is optional, the script also supports the previous method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
+But don't despair, for self-managed Macs, the script also supports the previous method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
 
 ## How to use
 
@@ -33,8 +33,9 @@ There are also a few commandline arguments:
 - `-r` will reveal the .plist responsible for these nags in Finder
 - `-p` will print the **current** values without making any changes
 - `-a <path|bundle_id>` creates a new entry in the plist for an app that you specify
-- `--profile` opens Device Management in System Settings (to manage MDM profiles)
 - `--reset` initialize an empty ScreenCaptureApprovals.plist
+- `--generate_profile` generate configuration profile for use with your MDM server
+- `--profiles` opens Device Management in System Settings (to manage MDM profiles)
 
 ### Example of manually adding an app
 
