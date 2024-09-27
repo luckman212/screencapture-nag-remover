@@ -143,11 +143,13 @@ case $1 in
 		    -p,--print             print current values
 		    $(_manual_add_desc)
 		    --profile              opens Device Management in System Settings
+		    --reset                initialize an empty ${PLIST##*/}
 		EOF
 		exit
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
+	--reset) _createPlist; exit;;
 	--profile) _openDeviceManagement; exit;;
 esac
 
