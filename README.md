@@ -38,12 +38,12 @@ There are also a few commandline arguments:
 
 ### Example of manually adding an app
 
-macOS 15.0
+macOS 15.0 (by specifying path)
 ```
 screencapture-nag-remover.sh -a "/Applications/CleanShot X.app/Contents/MacOS/CleanShot X"
 ```
 
-macOS 15.1
+macOS 15.1 (using Bundle ID)
 ```
 screencapture-nag-remover.sh -a cc.ffitch.shottr
 ```
