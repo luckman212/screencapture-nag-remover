@@ -151,12 +151,12 @@ case $1 in
 		EOF
 		if _os_is_151_or_higher; then cat <<-EOF
 
-		    ┌───────────────────────────────────────────────────────────────────────────────┐
-		    │  For Macs enrolled in an MDM server (Jamf, Addigy, Mosyle etc), macOS 15.1    │
-		    │  offers an official method for suppressing ScreenCapture alerts for ALL apps. │
-		    │  This is achieved by applying a Configuration Profile, which can be generated │
-		    │  using the --generate_profile flag above.                                     │
-		    └───────────────────────────────────────────────────────────────────────────────┘
+		    ┌────────────────────────────────────────────────────────────────────────────────────┐
+		    │  macOS 15.1 introduced an official method for suppressing ScreenCapture alerts     │
+		    │  for ALL apps on Macs enrolled in an MDM server (Jamf, Addigy, Mosyle etc).        │
+		    │                                                                                    │
+		    │  A configuration profile to enable this can be generated using --generate_profile  │
+		    └────────────────────────────────────────────────────────────────────────────────────┘
 
 		EOF
 		fi
