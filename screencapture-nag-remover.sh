@@ -40,6 +40,7 @@ _bounce_daemons() {
 }
 
 _nagblock() {
+	echo "in nagblock [$1]"
 	local APP_NAME
 	if _os_is_151_or_higher; then
 		if [[ -z $1 ]]; then
