@@ -84,14 +84,28 @@ _install_mdm_profile() {
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PayloadUUID</key>
+	<string>E6056B28-1B01-4EED-8F41-859E6C02E688</string>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadDisplayName</key>
+	<string>Disable ScreenCapture Alerts</string>
+	<key>PayloadIdentifier</key>
+	<string>com.apple.sequoia.stop.nagging</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+	<key>PayloadEnabled</key>
+	<true/>
+	<key>PayloadScope</key>
+	<string>System</string>
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>PayloadIdentifier</key>
-			<string>com.apple.sequoia.stop.nagging</string>
+			<key>PayloadUUID</key>
+			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
 			<key>PayloadType</key>
 			<string>com.apple.TCC</string>
-			<key>PayloadUUID</key>
+			<key>PayloadIdentifier</key>
 			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
 			<key>com.apple.TCC.configuration-profile-policy</key>
 			<dict>
@@ -103,16 +117,6 @@ _install_mdm_profile() {
 			</dict>
 		</dict>
 	</array>
-	<key>PayloadDisplayName</key>
-	<string>Disable ScreenCapture Alerts</string>
-	<key>PayloadIdentifier</key>
-	<string>com.apple.sequoia.stop.nagging</string>
-	<key>PayloadType</key>
-	<string>Configuration</string>
-	<key>PayloadUUID</key>
-	<string>E6056B28-1B01-4EED-8F41-859E6C02E688</string>
-	<key>PayloadVersion</key>
-	<integer>1</integer>
 </dict>
 </plist>
 EOF
