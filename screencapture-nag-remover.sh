@@ -10,7 +10,7 @@ if (( MAJ < 15 )); then
 fi
 
 _openDeviceManagement() {
-	open 'x-apple.systempreferences:com.apple.preferences.configurationprofiles'
+	/usr/bin/open 'x-apple.systempreferences:com.apple.preferences.configurationprofiles'
 }
 
 _createPlist() {
@@ -44,7 +44,7 @@ _nagblock() {
 }
 
 _installMdmProfile() {
-cat <<EOF >"$MDM_PROFILE"
+/bin/cat <<EOF >"$MDM_PROFILE"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -81,8 +81,8 @@ cat <<EOF >"$MDM_PROFILE"
 </dict>
 </plist>
 EOF
-open "$MDM_PROFILE"
-cat <<EOF
+/usr/bin/open "$MDM_PROFILE"
+/bin/cat <<EOF
 
 The Device Management panel from System Settings should now open.
 Double-click on the 'Disable ScreenCapture Alerts' profile to install and activate it.
@@ -103,6 +103,8 @@ case $1 in
 		EOF
 		exit
 		;;
+	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
+	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
 	--profile) _openDeviceManagement; exit;;
 esac
 
@@ -142,8 +144,6 @@ fi
 FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
 case $1 in
-	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
-	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
 	-a|--add)	_nagblock "$2"; _bounce_daemons; exit;;
 	-*) echo >&2 "invalid arg: $1"; exit 1;;
 esac
