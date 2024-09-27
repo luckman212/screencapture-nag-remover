@@ -146,6 +146,7 @@ case $1 in
 		    $(_manual_add_desc)
 		    --profile              opens Device Management in System Settings
 		    --reset                initialize an empty ${PLIST##*/}
+		    --ignore               ignore MDM profile even if installed (legacy mode)
 		EOF
 		exit
 		;;
@@ -153,9 +154,10 @@ case $1 in
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
 	--profile) _open_device_management; exit;;
 	--reset) _create_plist; exit;;
+	--ignore) shift; IGNORE_MDM_PROFILE=true;;
 esac
 
-if _os_is_151_or_higher && (( $# == 0 )); then
+if _os_is_151_or_higher && (( $# == 0 )) && [[ $IGNORE_MDM_PROFILE != true ]]; then
 	if ! profiles list -type configuration | grep -q com.apple.sequoia.stop.nagging ; then
 		cat <<-EOF
 		┌─────────────────────────────────────────────────────────────────────────────┐
