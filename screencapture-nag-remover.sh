@@ -2,6 +2,7 @@
 
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
 MDM_PROFILE="$HOME/Downloads/macOS_15.1_DisableScreenCaptureAlerts.mobileconfig"
+FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
 IFS='.' read -r MAJ MIN _ < <(/usr/bin/sw_vers --productVersion)
 if (( MAJ < 15 )); then
@@ -24,7 +25,7 @@ _bundleid_to_name() {
 }
 
 _create_plist() {
-	cat <<-EOF >"$PLIST"
+	cat <<-EOF >"$PLIST" 2>/dev/null
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 	<plist version="1.0">
@@ -161,11 +162,12 @@ case $1 in
 		;;
 	-r|--reveal) /usr/bin/open -R "$PLIST"; exit;;
 	-p|--print) /usr/bin/plutil -p "$PLIST"; exit;;
-	--reset) _create_plist; exit;;
+	--reset) _create_plist || echo >&2 "error, could not create plist"; exit;;
 	--generate_profile) _generate_mdm_profile; exit;;
 	--profiles) _open_device_management; exit;;
 esac
 
+[[ -e $PLIST ]] || _create_plist
 if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	if [[ -n $__CFBundleIdentifier ]]; then
 		TERMINAL_NAME=$(_bundleid_to_name "$__CFBundleIdentifier")
@@ -174,9 +176,6 @@ if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
 	exit 1
 fi
-
-[[ -e $PLIST ]] || _create_plist
-FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
 
 case $1 in
 	-a|--add)	_nagblock "$2"; _bounce_daemons; exit;;
