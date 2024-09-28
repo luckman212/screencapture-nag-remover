@@ -1,8 +1,13 @@
 #!/bin/bash
 
+SELF='screencapture-nag-remover'
+FQPN=$(realpath "$0")
 PLIST="$HOME/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist"
+AGENT_PLIST="$HOME/Library/LaunchAgents/$SELF.plist"
 MDM_PROFILE="$HOME/Downloads/macOS_15.1_DisableScreenCaptureAlerts.mobileconfig"
+TCC_DB='/Library/Application Support/com.apple.TCC/TCC.db'
 FUTURE=$(/bin/date -j -v+100y +"%Y-%m-%d %H:%M:%S +0000")
+INTERVAL=86400 #run every 24h
 
 IFS='.' read -r MAJ MIN _ < <(/usr/bin/sw_vers --productVersion)
 if (( MAJ < 15 )); then
@@ -12,6 +17,10 @@ fi
 
 _os_is_151_or_higher() {
 	(( MAJ >= 15 )) && (( MIN > 0 ))
+}
+
+_fda_settings() {
+	/usr/bin/open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
 }
 
 _open_device_management() {
@@ -129,7 +138,71 @@ EOF
 #/usr/bin/open "$MDM_PROFILE"
 #_open_device_management
 echo "import ${MDM_PROFILE##*/} into your MDM to provision it"
-open -R "$MDM_PROFILE"
+/usr/bin/open -R "$MDM_PROFILE"
+}
+
+_uninstall_launchagent() {
+	/bin/launchctl bootout gui/$UID "$AGENT_PLIST" 2>/dev/null
+	/bin/rm 2>/dev/null "$AGENT_PLIST"
+	echo "uninstalled $SELF LaunchAgent"
+}
+
+_install_launchagent() {
+	_uninstall_launchagent &>/dev/null
+	read -r FDA_TEST < <(/usr/bin/sqlite3 "$TCC_DB" <<-EOS
+	SELECT COUNT(client)
+	FROM access
+	WHERE
+		client = '/bin/bash' AND
+		service = 'kTCCServiceSystemPolicyAllFiles' AND
+		auth_value = 2
+	EOS
+	)
+	if (( FDA_TEST == 0 )); then
+		/bin/cat <<-EOF >&2
+		┌──────────────────────────────────────────────────────────────────────────────────────┐
+		│  For the LaunchAgent to work properly, you must grant Full Disk Access to /bin/bash  │
+		│                                                                                      │
+		│  The Full Disk Access settings panel will now be opened. Press the (+) button near   │
+		│  the bottom of the window, then press [⌘cmd + ⇧shift + g] and type '/bin/bash' and   │
+		│  click Open to get it to appear in the app list.                                     │
+		│                                                                                      │
+		│  Once that's all done, run the --install command again.                              │
+		└──────────────────────────────────────────────────────────────────────────────────────┘
+		EOF
+		sleep 3
+		_fda_settings
+		return 1
+	fi
+	/bin/cat >"$AGENT_PLIST" <<-EOF
+	<?xml version="1.0" encoding="UTF-8"?>
+	<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+	<plist version="1.0">
+	<dict>
+		<key>Label</key>
+		<string>$SELF.agent</string>
+		<key>ProgramArguments</key>
+		<array>
+			<string>/bin/bash</string>
+			<string>--norc</string>
+			<string>--noprofile</string>
+			<string>$FQPN</string>
+		</array>
+		<key>StandardErrorPath</key>
+		<string>/private/tmp/$SELF.stderr</string>
+		<key>StandardOutPath</key>
+		<string>/private/tmp/$SELF.stdout</string>
+		<key>StartInterval</key>
+		<integer>$INTERVAL</integer>
+		<key>WorkingDirectory</key>
+		<string>/private/tmp</string>
+	</dict>
+	</plist>
+	EOF
+	/bin/chmod 644 "$PLIST"
+	if /bin/launchctl bootstrap gui/$UID "$AGENT_PLIST"; then
+		echo "installed $SELF LaunchAgent"
+	fi
 }
 
 _manual_add_desc() {
@@ -152,8 +225,10 @@ case $1 in
 		    --reset                initialize empty ${PLIST##*/}
 		    --generate_profile     generate configuration profile for use with your MDM server
 		    --profiles             opens Device Management in System Settings
+		    --install              install LaunchAgent to ensure alerts continue to be silenced
+		    --uninstall            remove LaunchAgent
 		EOF
-		if _os_is_151_or_higher; then cat <<-EOF
+		if _os_is_151_or_higher; then /bin/cat <<-EOF
 
 		    ┌────────────────────────────────────────────────────────────────────────────────────┐
 		    │  macOS 15.1 introduced an official method for suppressing ScreenCapture alerts     │
@@ -170,7 +245,7 @@ case $1 in
 		if [[ -e $PLIST ]]; then
 			/usr/bin/open -R "$PLIST"
 		else
-			/usr/bin/open "$(dirname "$PLIST")"
+			/usr/bin/open "$(/usr/bin/dirname "$PLIST")"
 		fi
 		exit
 		;;
@@ -185,6 +260,8 @@ case $1 in
 	--reset) _create_plist || echo >&2 "error, could not create ${PLIST##*/}"; exit;;
 	--generate_profile) _generate_mdm_profile; exit;;
 	--profiles) _open_device_management; exit;;
+	--install) _install_launchagent; exit;;
+	--uninstall) _uninstall_launchagent; exit;;
 esac
 
 [[ -e $PLIST ]] || _create_plist
@@ -192,8 +269,8 @@ if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 	if [[ -n $__CFBundleIdentifier ]]; then
 		TERMINAL_NAME=$(_bundleid_to_name "$__CFBundleIdentifier")
 	fi
-	echo >&2 "Full Disk Access is required${TERMINAL_NAME:+ for $TERMINAL_NAME}"
-	open 'x-apple.systempreferences:com.apple.preference.security?Privacy_AllFiles'
+	echo >&2 "Full Disk Access permissions are missing${TERMINAL_NAME:+ for $TERMINAL_NAME}"
+	_fda_settings
 	exit 1
 fi
 
@@ -210,3 +287,5 @@ done < <(_enum_apps)
 
 #bounce daemons if any changes were made so the new settings take effect
 (( c > 0 )) && _bounce_daemons
+
+exit 0

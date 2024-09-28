@@ -16,13 +16,19 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This leverages a configuration profile which must be provisioned by an MDM server (e.g Jamf, Addigy, Mosyle etc). Apple unfortunately prohibits self-installing configuration profiles for certain TCC settings, ScreenCapture being one of them.
 
-But don't despair, for self-managed Macs, the script also supports the previous method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
+But don't despair, for self-managed Macs, the script also supports the standard method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
+
+## Automatic Updates via LaunchAgent (required for smooth operation on 15.1)
+
+macOS 15.1 made a change to replayd whereby upon each invocation of an app that requests ScreenCapture permission, the timestamp in the plist is overwritten with the current date/time. The net effect is that if you use an app once, and then don't use it again for >30 days, you will be nagged again, even if you had previously disabled the nag.
+
+v1.3.0 of this script added a workaround for this: an option to install a LaunchAgent which runs every 24h and keeps the timestamps updated, ensuring that nags are kept hidden even as apps are used or if your clock abruptly changes.
 
 ## How to use
 
 Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
 
-Then run the program from a shell (Full Disk Access is required, and the program will check to ensure FDA has been granted. If it hasn't, the relevant System Settings panel will be opened).
+Then run the program from a shell. Full Disk Access is required so the protected plist file can be accessed. The program will check to ensure FDA has been granted. If it hasn't, the relevant System Settings panel will be opened.
 
 With no arguments, it will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
 
@@ -36,6 +42,8 @@ There are also a few commandline arguments:
 - `--reset` initialize an empty ScreenCaptureApprovals.plist
 - `--generate_profile` generate configuration profile for use with your MDM server
 - `--profiles` opens Device Management in System Settings (to manage MDM profiles)
+- `--install` installs a LaunchAgent (runs once per day) which ensures the nag dates are kept updated
+- `--uninstall` removes the LaunchAgent
 
 ### Example of manually adding an app
 
