@@ -275,7 +275,11 @@ if ! /usr/bin/touch "$PLIST" 2>/dev/null; then
 fi
 
 case $1 in
-	-a|--add)	_nagblock "$2"; _bounce_daemons; exit;;
+	-a|--add)
+		_nagblock "$2"
+		_bounce_daemons
+		exit
+		;;
 	-*) echo >&2 "invalid arg: $1"; exit 1;;
 esac
 
