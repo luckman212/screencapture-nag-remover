@@ -26,9 +26,15 @@ v1.3.0 of this script added a workaround for this: an option to install a Launch
 
 ## How to use
 
-Download the latest [release][4] and place the script in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
+Download the latest [release][4] and place the `screencapture-nag-remover.sh` file in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
 
-Then run the program from a shell. Full Disk Access is required so the protected plist file can be accessed. The program will check to ensure FDA has been granted. If it hasn't, the relevant System Settings panel will be opened.
+Then run the program from a Terminal by typing:
+
+```
+screencapture-nag-remover.sh
+```
+
+Full Disk Access is required so the protected plist file can be accessed. The program will check to ensure FDA has been granted. If it hasn't, the relevant System Settings panel will be opened.
 
 With no arguments, it will iterate over any apps which have requested screencapture permissions and set the nag date for each to 100 years in the future. That _should_ prevent you from seeing the nag again.
 
