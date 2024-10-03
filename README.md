@@ -22,7 +22,7 @@ But don't despair, for self-managed Macs, the script also supports the standard 
 
 macOS 15.1 made a change to replayd whereby upon each invocation of an app that requests ScreenCapture permission, the timestamp in the plist is overwritten with the current date/time. The net effect is that if you use an app once, and then don't use it again for >30 days, you will be nagged again, even if you had previously disabled the nag.
 
-v1.3.0 of this script added a workaround for this: an option to install a LaunchAgent which runs every 24h and keeps the timestamps updated, ensuring that nags are kept hidden even as apps are used or if your clock abruptly changes.
+v1.3.0 of this script added a workaround for this: an option to install a LaunchAgent which runs every 24h and keeps the timestamps updated. This ensures that nags are kept hidden even as apps are used or if your system clock abruptly changes.
 
 ## Setup
 
