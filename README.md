@@ -26,9 +26,11 @@ v1.3.0 of this script added a workaround for this: an option to install a Launch
 
 ## How to use
 
-Download the latest [release][4] and place the `screencapture-nag-remover.sh` file in your `$PATH` (I suggest `/usr/local/bin` if you're unsure).
-
-Then run the program from a Terminal by typing:
+1. Download the latest [release][4].
+2. Open a Terminal and type `cd ~/Downloads` to navigate to the directory which should contain the file you just downloaded.
+3. Remove the quarantine flag which probably exists on the file: `xattr -d screencapture-nag-remover.sh`
+4. Place that `screencapture-nag-remover.sh` file in your `$PATH` (I suggest `/usr/local/bin` if you're unsure)
+5. You are now ready to run the program—type:
 
 ```
 screencapture-nag-remover.sh
@@ -42,6 +44,7 @@ With no arguments, it will iterate over any apps which have requested screencapt
 
 There are also a few commandline arguments:
 
+- `-h` shows the helptext
 - `-r` will reveal the .plist responsible for these nags in Finder
 - `-p` will print the **current** values without making any changes
 - `-a <path|bundle_id>` creates a new entry in the plist for an app that you specify
