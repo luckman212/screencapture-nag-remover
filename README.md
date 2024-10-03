@@ -24,13 +24,17 @@ macOS 15.1 made a change to replayd whereby upon each invocation of an app that 
 
 v1.3.0 of this script added a workaround for this: an option to install a LaunchAgent which runs every 24h and keeps the timestamps updated, ensuring that nags are kept hidden even as apps are used or if your clock abruptly changes.
 
-## How to use
+## Setup
 
 1. Download the latest [release][4].
 2. Open a Terminal and type `cd ~/Downloads` to navigate to the directory which should contain the file you just downloaded.
 3. Remove the quarantine flag which probably exists on the file: `xattr -d screencapture-nag-remover.sh`
-4. Place that `screencapture-nag-remover.sh` file in your `$PATH` (I suggest `/usr/local/bin` if you're unsure)
-5. You are now ready to run the program—type:
+4. Place that `screencapture-nag-remover.sh` file somewhere in your `$PATH` (I suggest `/usr/local/bin` if you're unsure)
+5. You are now ready to run the program!
+
+## Use
+
+Open a Terminal and type:
 
 ```
 screencapture-nag-remover.sh
