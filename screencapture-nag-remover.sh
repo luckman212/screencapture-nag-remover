@@ -71,12 +71,14 @@ _nagblock() {
 		IFS='/' read -ra PARTS <<< "$1"
 		for p in "${PARTS[@]}"; do
 			if [[ $p == *.app ]]; then
-				echo >&2 "disabling nag for $p"
-				/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
-				(( c++ ))
-				return 0
+				APP_NAME=$p
+				break
 			fi
 		done
+		echo >&2 "disabling nag for ${APP_NAME:-$1}"
+		/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
+		(( c++ ))
+		return 0
 	fi
 }
 
