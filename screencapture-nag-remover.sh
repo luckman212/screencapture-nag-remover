@@ -29,7 +29,7 @@ _open_device_management() {
 
 _bundleid_to_name() {
 	local APP_NAME
-	APP_NAME=$(/usr/bin/mdfind "kMDItemCFBundleIdentifier == '$1'" 2>/dev/null)
+	APP_NAME=$(/usr/bin/mdfind kMDItemCFBundleIdentifier == "$1" 2>/dev/null)
 	echo "${APP_NAME##*/}"
 }
 
