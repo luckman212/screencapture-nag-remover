@@ -35,7 +35,7 @@ v1.3.0 of this script added a workaround for this: an option to install a Launch
 
 ## Use
 
-Open a Terminal and type:
+Open a Terminal and run:
 
 ```
 screencapture-nag-remover.sh
