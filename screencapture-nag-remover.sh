@@ -57,7 +57,7 @@ _nagblock() {
 			return 1
 		fi
 		APP_NAME=$(_bundleid_to_name "$1")
-		echo >&2 "disabling nag for $1${APP_NAME:+ ($APP_NAME)}"
+		echo "disabling nag for $1${APP_NAME:+ ($APP_NAME)}"
 		/usr/bin/defaults write "$PLIST" "$1" -dict \
 			kScreenCaptureApprovalLastAlerted -date "$FUTURE" \
 			kScreenCaptureApprovalLastUsed -date "$FUTURE"
@@ -75,7 +75,7 @@ _nagblock() {
 				break
 			fi
 		done
-		echo >&2 "disabling nag for ${APP_NAME:-$1}"
+		echo "disabling nag for ${APP_NAME:-$1}"
 		/usr/bin/defaults write "$PLIST" "$1" -date "$FUTURE"
 		(( c++ ))
 		return 0
