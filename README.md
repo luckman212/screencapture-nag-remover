@@ -12,7 +12,7 @@ macOS 15 (Sequoia) introduced a new "security" feature which has frustrated many
 
 This script operates on the `~/Library/Group Containers/group.com.apple.replayd/ScreenCaptureApprovals.plist` and sets the nag dates far in the future to avoid the popups from appearing.
 
-## macOS 15.1 (currently in beta)
+## macOS 15.1
 
 macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This leverages a configuration profile which must be provisioned by an MDM server (e.g Jamf, Addigy, Mosyle etc). Apple unfortunately prohibits self-installing configuration profiles for certain TCC settings, ScreenCapture being one of them.
 
