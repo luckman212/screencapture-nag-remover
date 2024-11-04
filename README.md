@@ -14,7 +14,7 @@ This script operates on the `~/Library/Group Containers/group.com.apple.replayd/
 
 ## macOS 15.1
 
-macOS 15.1 [introduces a new method][5] for suppressing these alerts across the board. This leverages a configuration profile which must be provisioned by an MDM server (e.g Jamf, Addigy, Mosyle etc). Apple unfortunately prohibits self-installing configuration profiles for certain TCC settings, ScreenCapture being one of them.
+macOS 15.1 [introduced a new method][5] (additional reference [here][6]) for suppressing these alerts across the board. This leverages a configuration profile which must be provisioned by an MDM server (e.g Jamf, Addigy, Mosyle etc). Apple unfortunately prohibits self-installing configuration profiles for certain TCC settings, ScreenCapture being one of them.
 
 But don't despair, for self-managed Macs, the script also supports the standard method of individually setting MRU dates for each app (including macOS 15.1's new multi-keyed dict approach).
 
@@ -79,3 +79,4 @@ If you encounter any problems, please file an [issue][3]. And in case anyone [@A
 [3]: https://github.com/luckman212/screencapture-nag-remover/issues
 [4]: https://github.com/luckman212/screencapture-nag-remover/releases
 [5]: https://developer.apple.com/documentation/macos-release-notes/macos-15_1-release-notes#New-Features
+[6]: https://github.com/apple/device-management/blob/b6202ca2fbd31286a52eb160b67a4db7b4fe1f1f/mdm/profiles/com.apple.applicationaccess.yaml#L3546
