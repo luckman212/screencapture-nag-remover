@@ -93,6 +93,8 @@ _enum_apps() {
 }
 
 _generate_mdm_profile() {
+UUID1=$(/usr/bin/uuidgen)
+UUID2=$(/usr/bin/uuidgen)
 /bin/cat <<EOF >"$MDM_PROFILE"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -101,38 +103,36 @@ _generate_mdm_profile() {
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>Services</key>
-			<dict>
-				<key>ScreenCapture</key>
-				<array>
-					<dict>
-						<key>forceBypassScreenCaptureAlert</key>
-						<true/>
-					</dict>
-				</array>
-			</dict>
+			<key>PayloadDisplayName</key>
+			<string>Restrictions</string>
 			<key>PayloadIdentifier</key>
-			<string>com.sequoia.stop.nagging.tccpayload</string>
+			<string>com.apple.applicationaccess.${UUID2}</string>
 			<key>PayloadType</key>
-			<string>com.apple.TCC.configuration-profile-policy</string>
+			<string>com.apple.applicationaccess</string>
 			<key>PayloadUUID</key>
-			<string>D6D8CA6B-1958-4CD7-92F8-D2F9CC34A4A4</string>
+			<string>${UUID2}</string>
 			<key>PayloadVersion</key>
 			<integer>1</integer>
+			<key>forceBypassScreenCaptureAlert</key>
+			<true/>
 		</dict>
 	</array>
+	<key>PayloadDescription</key>
+	<string>Disables additional screen capture alerts on macOS 15.1 or higher</string>
 	<key>PayloadDisplayName</key>
-	<string>Disable ScreenCapture Alerts</string>
+	<string>DisableScreenCaptureAlert</string>
 	<key>PayloadIdentifier</key>
-	<string>com.sequoia.stop.nagging</string>
+	<string>com.apple.applicationaccess.forceBypassScreenCaptureAlert</string>
+	<key>PayloadScope</key>
+	<string>System</string>
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>E6056B28-1B01-4EED-8F41-859E6C02E688</string>
+	<string>${UUID1}</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
-	<key>PayloadScope</key>
-	<string>System</string>
+	<key>TargetDeviceType</key>
+	<integer>5</integer>
 </dict>
 </plist>
 EOF
