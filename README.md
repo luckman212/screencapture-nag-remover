@@ -30,7 +30,7 @@ v1.3.0 of this script added a workaround for this: an option to install a Launch
 2. Open a Terminal and type `cd ~/Downloads` to navigate to the directory which should contain the file you just downloaded.
 3. Remove the quarantine flag which probably exists on the file: `xattr -d com.apple.quarantine screencapture-nag-remover.sh`
 4. Make the script executable: `chmod a+x screencapture-nag-remover.sh`
-5. Place that `screencapture-nag-remover.sh` file somewhere in your `$PATH` (I suggest `/usr/local/bin` if you're unsure)
+5. Place that `screencapture-nag-remover.sh` file somewhere in your `$PATH` (I suggest `/usr/local/bin` if you're unsure, e.g. `sudo mv screencapture-nag-remover.sh /usr/local/bin/screencapture-nag-remover.sh`)
 6. You are now ready to run the program!
 
 ## Use
