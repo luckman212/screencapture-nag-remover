@@ -60,7 +60,9 @@ _nagblock() {
 		echo "disabling nag for $1${APP_NAME:+ ($APP_NAME)}"
 		/usr/bin/defaults write "$PLIST" "$1" -dict \
 			kScreenCaptureApprovalLastAlerted -date "$FUTURE" \
-			kScreenCaptureApprovalLastUsed -date "$FUTURE"
+			kScreenCaptureApprovalLastUsed -date "$FUTURE" \
+			kScreenCapturePrivacyHintDate -date "$FUTURE" \
+			kScreenCapturePrivacyHintPolicy 7776000
 		(( c++ ))
 	else
 		if [[ -z $1 ]]; then
