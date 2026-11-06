@@ -6,3 +6,5 @@ updates:
     open-pull-requests-limit: 10
     rebase-strategy: auto
     labels: [dependencies, github-actions]
+    cooldown:
+      default-days: 7
